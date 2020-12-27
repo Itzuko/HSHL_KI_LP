@@ -58,13 +58,11 @@ print(readFile)
 def checkIfMin (stringToCheck):
     print("Überprüfe ob Min oder Max Problem")
     if stringToCheck == "min":
-        print("isMin")
+        print("min")
         return True 
-        #TODO: Wert zurückgeben
     elif stringToCheck =="max":
-        print("isMax")
+        print("max")
         return False
-        #TODO: Wert zurückgeben
     else:
         print("Etwas ist schiefgelaufen")
         #TODO: Programm neustarten
@@ -74,16 +72,38 @@ FileLineSplit = readFile.splitlines()
 minOrMax = FileLineSplit[1][:3]
 print(minOrMax)
 isMinProblem = checkIfMin(minOrMax)
-print(isMinProblem)
+print("Status ob minimierungsproblem: ",isMinProblem)
 
 #Anzahl der Constraints
 lineCount = readFile.splitlines()
-print(lineCount) 
-print(lineCount[3:]) #Gebe alle Constraints aus
+print(lineCount[3:]) #Gebe NUR alle Constraints aus
 constraintsArray = lineCount[3:]
 print(len(constraintsArray))
+print(len(constraintsArray[0]))
+print(constraintsArray[0][0:2])
+print(constraintsArray[0][36:38])
 
-#Evtl Nicht mehr relevant
-#print(len(lineCount))
-#print(len(lineCount) - 3)
+#Array aufbauen
 
+#String lesen
+#Iteriere durch den String bis zum Ende
+# Überprüfe ob char ist numeric
+# Falls numeric springe zwei zeichen zurück
+# Überprüfe ob + oder -
+# Wenn + oder- füge zum Array hinzu
+# Ansonsten gehe zum nächsten Char und beginne von Vorn
+
+for i,char in enumerate(constraintsArray[0]):
+    if(char.isnumeric()):
+        print(constraintsArray[0][i-4:i-2])
+        if (constraintsArray[0][i-2]== '+' or constraintsArray[0][i-2] == "-"):
+            print(char)
+        elif(constraintsArray[0][i-4:i-2] == ">="): #das funktioniert hier nicht
+            print ("hi",char)    
+
+    
+#Gehe solange durch den String bis Zahl gefunden
+# Springe 2 zeichen zurück
+# Überprüfe ob +, - oder = zeichen ist.
+# Trage Zahl in Array
+# Wiederhole bis zum Ende
