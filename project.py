@@ -80,26 +80,36 @@ print(lineCount[3:]) #Gebe NUR alle Constraints aus
 constraintsArray = lineCount[3:]
 print(len(constraintsArray))
 print(len(constraintsArray[0]))
-print(constraintsArray[0][0:2])
-print(constraintsArray[0][36:38])
 
 #Array aufbauen
 
 #String lesen
 #Iteriere durch den String bis zum Ende
 # Überprüfe ob char ist numeric
+# Überprüfe ob einstellige Zahl oder Mehrstellig.
 # Falls numeric springe zwei zeichen zurück
 # Überprüfe ob + oder -
-# Wenn + oder- füge zum Array hinzu
+# Überprüfe ob >= oder <= 
+# Wenn + oder -  füge zum Array hinzu
+# Wenn >= oder <= füge zum Array hinzu
 # Ansonsten gehe zum nächsten Char und beginne von Vorn
 
-for i,char in enumerate(constraintsArray[0]):
-    if(char.isnumeric()):
-        print(constraintsArray[0][i-4:i-2])
-        if (constraintsArray[0][i-2]== '+' or constraintsArray[0][i-2] == "-"):
-            print(char)
-        elif(constraintsArray[0][i-4:i-2] == ">="): #das funktioniert hier nicht
-            print ("hi",char)    
+
+for indexOne,arrayItem in enumerate(constraintsArray):
+    print(indexOne,arrayItem)
+    for indexTwo,char in enumerate(arrayItem):
+        if(char.isnumeric()):
+            if (arrayItem[indexTwo-2] == '+' or arrayItem[indexTwo-2] == "-"):
+                print(char) #TODO: Zahl zum Array hinzufügen
+            elif(arrayItem[indexTwo-3:indexTwo-1] == ">="): 
+                print ("last number: ",char) #TODO: Zahl zum Array hinzufügen
+
+# for i,char in enumerate(constraintsArray[0]):
+#     if(char.isnumeric()):
+#         if (constraintsArray[0][i-2]== '+' or constraintsArray[0][i-2] == "-"):
+#             print(char) #TODO: Zahl zum Array hinzufügen
+#         elif(constraintsArray[0][i-3:i-1] == ">="): 
+#             print ("last number: ",char) #TODO: Zahl zum Array hinzufügen
 
     
 #Gehe solange durch den String bis Zahl gefunden
