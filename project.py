@@ -77,10 +77,18 @@ print("Status ob minimierungsproblem: ",isMinProblem)
 
 #Anzahl der Constraints
 lineCount = readFile.splitlines()
-print(lineCount[3:]) #Gebe NUR alle Constraints aus
 constraintsArray = lineCount[3:]
 coef_regex = re.compile(r"(\d+)(?:\*|;)")
 coef_string = [coef_regex.findall(i) for i in constraintsArray]
 coefficients = [list(map(int, x)) for x in coef_string]
-print(coefficients)
-print(len(coefficients))
+
+
+#Füge zum Array die Funktion hinzu
+tmpFunction = FileLineSplit[1][4:]
+tmpFunctionRegex = re.compile(r"(\d+)(?:\*)")
+tmpFunctionString = re.findall(tmpFunctionRegex, tmpFunction)
+tmpNumbersOfFunction = list(map(int, tmpFunctionString))
+tmpNumbersOfFunction.append("x")
+coefficients.append(tmpNumbersOfFunction)
+allNumbersOfFile = coefficients
+print(allNumbersOfFile)
