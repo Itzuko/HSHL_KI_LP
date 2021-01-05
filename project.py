@@ -90,20 +90,16 @@ def trans(M):
 tmpFunction = FileLineSplit[1][4:]
 tmpFunctionRegex = re.compile(r"(\d+)(?:\*)")
 tmpFunctionString = re.findall(tmpFunctionRegex, tmpFunction)
-#print(tmpFunctionString)
 tmpNumbersOfFunction = list(map(int, tmpFunctionString))
-#print(tmpNumbersOfFunction)
 tmpNumbersOfFunction.append(0)
-#print(tmpNumbersOfFunction)
 coefficients.append(tmpNumbersOfFunction)
 allNumbersOfFile_List = coefficients
 print("Vollständig:")
-print(allNumbersOfFile_List)
-#fullArray = np.transpose(allNumbersOfFile_List)
+print(np.asarray(allNumbersOfFile_List))
 # TRANSPONIEREN...
 print("Transponiere...")
 fullArray = trans(allNumbersOfFile_List)
-print(fullArray)
+print(np.asarray(fullArray))
 
 def creationOfTableau(array):
     length = len(array)-1
@@ -135,7 +131,7 @@ def creationOfTableau(array):
         array[index] = value
     return array
 
+print("Tableau aufbauen...")
 fullArrayTableau = creationOfTableau(fullArray)
-print(fullArrayTableau)
-print(type(fullArrayTableau))
+print(np.asarray(fullArrayTableau))
 
