@@ -107,34 +107,35 @@ print(fullArray)
 
 def creationOfTableau(array):
     length = len(array)-1
-    print("Length: {}".format(length))
-    arrayWithoutFunction = array[:length]
     tmpCounterForOne = 0
-    #Nur Constraints
-    for index, value in enumerate(arrayWithoutFunction):
-
-        #print(value)
-        #print(index)
+    
+    for index, value in enumerate(array):
         tmpCounterAdder = 0
         
-        while tmpCounterAdder < length:
-            tmpLength = len(value)
-            #switch case 
-            if  tmpCounterForOne == index and tmpCounterForOne == tmpCounterAdder:
-                tmpCounterForOne += 1
-                value.insert(tmpLength-1,1)
-                
-            else: 
+        if index == length:
+            
+            while tmpCounterAdder < length:
+                tmpLength = len(value)
                 value.insert(tmpLength-1, 0)
-            tmpCounterAdder+=1
+                tmpCounterAdder+=1
+                
+        else:
+            while tmpCounterAdder < length:
+                #switch case 
+                tmpLength = len(value)
+                if  tmpCounterForOne == index and tmpCounterForOne == tmpCounterAdder:
+                    tmpCounterForOne += 1
+                    value.insert(tmpLength-1,1)
+                
+                else: 
+                    value.insert(tmpLength-1, 0)
+                tmpCounterAdder+=1
         
-        arrayWithoutFunction[index] = value
-        #print("ArrayWithoutFunction: {}".format(arrayWithoutFunction))
-    print("ArrayWithoutFunction: {}".format(arrayWithoutFunction))
-    
-    
-    print(array[length])
-    
+        
+        array[index] = value
+    return array
 
+fullArrayTableau = creationOfTableau(fullArray)
+print(fullArrayTableau)
+print(type(fullArrayTableau))
 
-creationOfTableau(fullArray)
