@@ -82,13 +82,59 @@ coef_regex = re.compile(r"(\d+)(?:\*|;)")
 coef_string = [coef_regex.findall(i) for i in constraintsArray]
 coefficients = [list(map(int, x)) for x in coef_string]
 
+def trans(M):
+    return [[M[j][i] for j in range(len(M))] for i in range(len(M[0]))]
 
-#Füge zum Array die Funktion hinzu
+
+#Füge die Funktion der Liste hinzu
 tmpFunction = FileLineSplit[1][4:]
 tmpFunctionRegex = re.compile(r"(\d+)(?:\*)")
 tmpFunctionString = re.findall(tmpFunctionRegex, tmpFunction)
+#print(tmpFunctionString)
 tmpNumbersOfFunction = list(map(int, tmpFunctionString))
-tmpNumbersOfFunction.append("x")
+#print(tmpNumbersOfFunction)
+tmpNumbersOfFunction.append(0)
+#print(tmpNumbersOfFunction)
 coefficients.append(tmpNumbersOfFunction)
-allNumbersOfFile = coefficients
-print(allNumbersOfFile)
+allNumbersOfFile_List = coefficients
+print("Vollständig:")
+print(allNumbersOfFile_List)
+#fullArray = np.transpose(allNumbersOfFile_List)
+# TRANSPONIEREN...
+print("Transponiere...")
+fullArray = trans(allNumbersOfFile_List)
+print(fullArray)
+
+def creationOfTableau(array):
+    length = len(array)-1
+    print("Length: {}".format(length))
+    arrayWithoutFunction = array[:length]
+    tmpCounterForOne = 0
+    #Nur Constraints
+    for index, value in enumerate(arrayWithoutFunction):
+
+        #print(value)
+        #print(index)
+        tmpCounterAdder = 0
+        
+        while tmpCounterAdder < length:
+            tmpLength = len(value)
+            #switch case 
+            if  tmpCounterForOne == index and tmpCounterForOne == tmpCounterAdder:
+                tmpCounterForOne += 1
+                value.insert(tmpLength-1,1)
+                
+            else: 
+                value.insert(tmpLength-1, 0)
+            tmpCounterAdder+=1
+        
+        arrayWithoutFunction[index] = value
+        #print("ArrayWithoutFunction: {}".format(arrayWithoutFunction))
+    print("ArrayWithoutFunction: {}".format(arrayWithoutFunction))
+    
+    
+    print(array[length])
+    
+
+
+creationOfTableau(fullArray)
