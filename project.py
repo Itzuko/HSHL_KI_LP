@@ -135,3 +135,70 @@ print("Tableau aufbauen...")
 fullArrayTableau = creationOfTableau(fullArray)
 print(np.asarray(fullArrayTableau))
 
+
+def findIndexForPivotColumn(tableau):
+    length = len(tableau)-1
+    print(tableau[:length])
+    indexArray = 0
+    highestValue = 0
+    for index, value in enumerate(tableau[:length]):
+        if value > highestValue:
+            highestValue = value
+            indexArray = index
+
+    return indexArray
+
+def findIndexForPivotRow(pivotColumn, endColumn):
+    length = len(pivotColumn)-1
+    engpassColumn = []
+    #Engpass erstellen
+    for index, value in enumerate(pivotColumn):
+        if(endColumn[index] != 0):
+            engpassColumn.append(endColumn[index]/value)
+        else:
+            engpassColumn.append(endColumn[index])
+
+    print("engpassColumn: {}".format(engpassColumn)) 
+
+    indexArray = 0
+    highestValue = 0
+    for index, value in enumerate(engpassColumn):
+        if(value < highestValue):
+            highestValue = value
+            indexArray = index
+
+    return indexArray
+
+def createColumn(indexPivotColumn, tableau):
+    pivotColumn = []
+    for value in tableau:
+        pivotColumn.append(value[indexPivotColumn])
+
+    return pivotColumn   
+
+def findPivotElement(tableu, indexColumn, IndexRow):
+    print("PivotElement: {}".format(tableu[indexColumn][IndexRow]))
+    print("PivotElement: {}".format(tableu[IndexRow][indexColumn]))
+
+
+def startAlgorithm(tableau):
+    #Finde Pivotspalte (zuerst Index finden und dann aufstellen)
+    length = len(tableau)-1
+    indexPivotColumn = findIndexForPivotColumn(tableau[length])
+    pivotColumn = createColumn(indexPivotColumn, tableau)
+    print("pivotColumn: {}".format(pivotColumn))
+    endIndex = len(tableau[length])-1
+    endColumn = createColumn(endIndex, tableau)
+    print("EndColumn: {}".format(endColumn))
+    indexPivotRow = findIndexForPivotRow(pivotColumn,endColumn)
+    #indexPivotRow = findPivotRow(pivotColumn, tableau, indexPivotColumn)
+    print("indexPivotRow: {}".format(indexPivotRow))
+
+startAlgorithm(fullArrayTableau)
+#Algorithmus
+# 1. Zielfunktionszeile höchster Wert => Pivotspalte
+# 2. Letzte Spalte drch Pivotspalte teilen
+# 3. Ergebnise = Engpass Einschränkung
+# -> leinster Wert = Pivotzeile
+# 4. Krezung zwischen Pivotspalte und Pivotzeile = Pivotelement
+# 5. Alles außer Pivotelement auf 0 bringen
