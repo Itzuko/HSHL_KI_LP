@@ -26,7 +26,7 @@ startImage = ("""
  |_|   |_|\___|_|  |_|  \___| |_____/ \__,_|\___|_|\_\___|_|            
   ______ ______ ______ ______ ______ ______ ______ ______ ______ ______ 
  |______|______|______|______|______|______|______|______|______|______|""")
-print(startImage)
+print("{}".format(startImage))
 print("\nWillkommen")
 print("Folgende Probleme können gelöst werden")
 #Array für die Dateien
@@ -84,7 +84,6 @@ coefficients = [list(map(int, x)) for x in coef_string]
 
 def trans(M):
     return [[M[j][i] for j in range(len(M))] for i in range(len(M[0]))]
-
 
 #Füge die Funktion der Liste hinzu
 tmpFunction = FileLineSplit[1][4:]
@@ -149,7 +148,6 @@ def findIndexForPivotColumn(tableau):
     return indexArray
 
 def findIndexForPivotRow(pivotColumn, endColumn):
-    length = len(pivotColumn)-1
     engpassColumn = []
     #Engpass erstellen
     for index, value in enumerate(pivotColumn):
@@ -176,9 +174,70 @@ def createColumn(indexPivotColumn, tableau):
 
     return pivotColumn   
 
+def createRow(indexPivotRow, tableau):
+    return tableau[indexPivotRow]
+    
+
+
 def findPivotElement(tableu, indexColumn, IndexRow):
-    print("PivotElement: {}".format(tableu[indexColumn][IndexRow]))
-    print("PivotElement: {}".format(tableu[IndexRow][indexColumn]))
+    pivotElement = tableu[IndexRow][indexColumn]
+    return pivotElement
+#Funktion um das PivotElement auf 1 zu bekommen
+def dividePivotRowByPivotElement(tableau, indexColumn, indexRow):
+    pivotElement = tableau[indexRow][indexColumn]
+    
+    newPivotRow = []
+
+    for value in tableau[indexRow]:
+        newPivotRow.append(value/pivotElement)
+    
+    return newPivotRow
+
+#Fuunktion um die Pivotspalte auf 0 zu bekommen bis auf das Pivotelement
+def setAllElementInPivotColumToZero(tableau, indexColumn, indexRow):
+    newPivotColumn = createColumn(indexColumn, tableau)
+    print("newPivotColumn: \n{}".format(newPivotColumn))
+    newPivotRow = createRow(indexRow, tableau)
+    print("newPivotRow: \n{}".format(newPivotRow))
+    pivotElement = newPivotColumn[indexColumn]
+    print("PivotElement: {}".format(pivotElement))
+    #Alle Zeilen außer PivotRow und Endzeile
+    length = len(tableau)-1
+    tmpArrayWithoutEnding = tableau[:length]
+    tmpArrayWithoutPivotRowAndEnding = tmpArrayWithoutEnding[:indexRow] + tmpArrayWithoutEnding[indexRow+1:]
+    print("tmpArray: \n{}".format(np.asarray(tmpArrayWithoutPivotRowAndEnding)))
+
+    for indexOne, valueOne in enumerate(tmpArrayWithoutPivotRowAndEnding):
+        print("Iteration:{}".format(indexOne))
+        print("Zeile:{}".format(valueOne))
+        Faktor = valueOne[indexColumn]
+        if(valueOne[indexColumn] == pivotElement or valueOne[indexColumn] == 0):
+            for indexTwo, valueTwo in enumerate(valueOne):
+                result = valueTwo - newPivotRow[indexTwo]
+                tmpArrayWithoutPivotRowAndEnding[indexOne][indexTwo] = result
+        elif(valueOne[indexColumn] < pivotElement or valueOne[indexColumn] > pivotElement):
+             for indexThree, valueThree in enumerate(valueOne):
+                result = valueThree - (newPivotRow[indexThree]*Faktor)
+                tmpArrayWithoutPivotRowAndEnding[indexOne][indexThree] = result
+    #OBSOLETE    
+    print("TMPARRRAY:\n{}".format(np.asarray(tmpArrayWithoutPivotRowAndEnding)))
+    #LineEnding:
+    functionArray = []
+    functionFaktor = tableau[length][indexColumn]
+    functionLength = len(tableau[length])-1
+    for index, value in enumerate(tableau[length]):
+        if functionLength == index:
+            result = 0 - newPivotRow[index]*functionFaktor
+            actualValue = value
+            newString = str(actualValue) + format(" ") + str( result) 
+            functionArray.append(newString)
+        else:
+            result = value - newPivotRow[index]*functionFaktor
+            functionArray.append(result)
+    tmpArrayWithoutPivotRowAndEnding.append(functionArray)
+    tmpArrayWithoutPivotRowAndEnding.insert(indexRow, newPivotRow)
+    return tmpArrayWithoutPivotRowAndEnding #tmpArray hat nun wieder PivotRow und Ende
+        
 
 
 def startAlgorithm(tableau):
@@ -191,8 +250,22 @@ def startAlgorithm(tableau):
     endColumn = createColumn(endIndex, tableau)
     print("EndColumn: {}".format(endColumn))
     indexPivotRow = findIndexForPivotRow(pivotColumn,endColumn)
-    #indexPivotRow = findPivotRow(pivotColumn, tableau, indexPivotColumn)
     print("indexPivotRow: {}".format(indexPivotRow))
+    pivotRow = createRow(indexPivotRow, tableau)
+    print("pivotRow: {}".format(pivotRow))
+    pivotElement = findPivotElement(tableau,indexPivotColumn,indexPivotRow)
+    print("PivotElement:{}".format(pivotElement))
+    if (pivotElement > 1):
+        newPivotRow = dividePivotRowByPivotElement(tableau,indexPivotColumn,indexPivotRow)
+        print("DividedRow: {}".format(newPivotRow))
+        #Row an der passenden Stelle einfügen
+        tableau[indexPivotRow] = newPivotRow
+        print("Neues Tableau: \n{}".format(np.asarray(tableau)))
+
+    tableau = setAllElementInPivotColumToZero(tableau,indexPivotColumn, indexPivotRow)
+    print("Table: {}".format(tableau))
+
+
 
 startAlgorithm(fullArrayTableau)
 #Algorithmus
@@ -201,4 +274,5 @@ startAlgorithm(fullArrayTableau)
 # 3. Ergebnise = Engpass Einschränkung
 # -> leinster Wert = Pivotzeile
 # 4. Krezung zwischen Pivotspalte und Pivotzeile = Pivotelement
-# 5. Alles außer Pivotelement auf 0 bringen
+# Prüfe ob PivotElement = 1 --> Falls nicht auf eins Bringen --> Zeile durch PivotElement teilen
+# 5. Alles in der Pivotspalte außer Pivotelement auf 0 bringen
