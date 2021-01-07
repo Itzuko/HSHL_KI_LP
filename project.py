@@ -284,12 +284,12 @@ def startAlgorithm(tableau):
         completeLength = len(tmpTableau)-1
         finalValue = len(tmpTableau[completeLength])-1
         results.append(tmpTableau[completeLength][finalValue])
-        print(results)
+        #print(results)
         #Setze den Finalen Wert zurück
         tmpTableau[completeLength][finalValue] = 0
 
     if(isFinal(tmpTableau) == True):
-        print("fast am ENDE")
+        print("Results: {}".format(results))
 
 
 startAlgorithm(fullArrayTableau)
