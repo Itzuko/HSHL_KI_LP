@@ -98,6 +98,10 @@ print(np.asarray(allNumbersOfFile_List))
 # TRANSPONIEREN...
 print("Transponiere...")
 fullArray = trans(allNumbersOfFile_List)
+#lengthFullArray = len(fullArray)-1
+#for index ,value in enumerate(fullArray[lengthFullArray]):
+#    fullArray[lengthFullArray][index] = value * -1
+
 print(np.asarray(fullArray))
 
 def creationOfTableau(array):
@@ -199,7 +203,7 @@ def setAllElementInPivotColumToZero(tableau, indexColumn, indexRow):
     #print("newPivotColumn: \n{}".format(newPivotColumn))
     newPivotRow = createRow(indexRow, tableau)
     #print("newPivotRow: \n{}".format(newPivotRow))
-    pivotElement = newPivotColumn[indexColumn]
+    pivotElement = newPivotColumn[indexRow] #TODO: BUG mit indexColumn
     #print("PivotElement: {}".format(pivotElement))
     #Alle Zeilen außer PivotRow und Endzeile
     length = len(tableau)-1
@@ -253,6 +257,14 @@ def isFinal(tableau):
 
     return state
 
+def multiplyFunctionWithMinusOne(tmpTableau):
+    indexLastLine = len(tmpTableau)-1
+    for index, value in enumerate(tmpTableau[indexLastLine]):
+        tmpTableau[indexLastLine][index] = value * -1
+    
+    return tmpTableau
+
+
 def startAlgorithm(tableau):
     iteration = 0
     tmpTableau = tableau
@@ -294,10 +306,15 @@ def startAlgorithm(tableau):
 
     if(isFinal(tmpTableau) == True):
         print("Finished")
-        tmpTableau = trans(tmpTableau)
+        tmpTableau = multiplyFunctionWithMinusOne(tmpTableau)
+        
         forPrint = np.asarray(tmpTableau)
         forPrintRounded = forPrint.round(2)
         print("{}".format(forPrintRounded))
+        #tmpTableau = trans(tmpTableau)
+        #forPrint = np.asarray(tmpTableau)
+        #forPrintRounded = forPrint.round(2)
+        #print("{}".format(forPrintRounded))
         #print("Results: {}".format(results))
 
 
