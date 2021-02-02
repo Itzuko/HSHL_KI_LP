@@ -264,6 +264,48 @@ def multiplyFunctionWithMinusOne(tmpTableau):
     
     return tmpTableau
 
+def getFinalValuesOfVariables(tmpTableau):
+    tmpArray = []
+    indexForOnes = []
+    length = len(tmpTableau)-1
+    tmpTableauWithoutEnd = tmpTableau[:length]
+    tmpTableauTrans = trans(tmpTableauWithoutEnd)
+    lengthTrans = len(tmpTableauTrans)-1
+    tmpTableauTransWithoutEnd = tmpTableauTrans[:lengthTrans]
+    forPrint = np.asarray(tmpTableauTrans)
+    forPrintRounded = forPrint.round(2)
+    print("tmpTableTrans: \n{}".format(forPrintRounded))
+
+    #Überprüfe ob die Zeile nur aus 0 oder 1 besteht
+    for value in tmpTableauTransWithoutEnd:
+        onlyOneAndZeros = False
+        for index ,line in enumerate(value):
+            #check if value 0 or 1
+            if line == 0 or line == 1:
+                onlyOneAndZeros = True
+                if line == 1:
+                    indexForOnes.append(index) 
+            else:
+                onlyOneAndZeros = False
+                break
+        if onlyOneAndZeros == True:
+            tmpArray.append(True)
+        else:
+            tmpArray.append(False)
+    print("tmpArray:{}".format(tmpArray))
+    indices = np.where(tmpArray)[0]
+    print(len(indices))
+    print("TandF:{}".format((indices)))
+    print("Index:{}".format(indexForOnes))
+    valueArray = []
+    for value in indexForOnes:
+        temp = tmpTableau[value]
+        tmpLength = len(temp)-1
+        valueArray.append(temp[tmpLength])
+        
+    for index, value in enumerate(indices):
+        print("x{0} = {1}".format(value, valueArray[index]))
+    
 
 def startAlgorithm(tableau):
     iteration = 0
@@ -296,27 +338,18 @@ def startAlgorithm(tableau):
         forPrint = np.asarray(tmpTableau)
         forPrintRounded = forPrint.round(2)
         print("{}".format(forPrintRounded))
-        #print("{}".format(np.asarray(tmpTableau))
-        #completeLength = len(tmpTableau)-1
-        #finalValue = len(tmpTableau[completeLength])-1
-        #results.append(tmpTableau[completeLength][finalValue])
-        #print(results)
-        #Setze den Finalen Wert zurück
-        #tmpTableau[completeLength][finalValue] = 0
 
     if(isFinal(tmpTableau) == True):
-        print("Finished")
+        print("Ende.")
         tmpTableau = multiplyFunctionWithMinusOne(tmpTableau)
-        
         forPrint = np.asarray(tmpTableau)
         forPrintRounded = forPrint.round(2)
-        print("{}".format(forPrintRounded))
-        #tmpTableau = trans(tmpTableau)
-        #forPrint = np.asarray(tmpTableau)
-        #forPrintRounded = forPrint.round(2)
-        #print("{}".format(forPrintRounded))
-        #print("Results: {}".format(results))
-
+        print("Finales Tableau:\n{}".format(forPrintRounded))
+        getFinalValuesOfVariables(tmpTableau)
+        tableauLength = len(tmpTableau)-1
+        finalValue = len(tmpTableau[tableauLength])-1
+        resultValue = tmpTableau[tableauLength][finalValue]
+        print("result: {}".format(resultValue))
 
 startAlgorithm(fullArrayTableau)
 #Algorithmus
