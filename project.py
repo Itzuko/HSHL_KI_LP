@@ -3,6 +3,20 @@ import sys
 import numpy as np
 import re
 
+#Lösung überprüft mit:
+#http://simplex.tode.cz/en/ 
+
+#Eigenes Github-Repo:
+#https://github.com/Itzuko/HSHL_KI_LP
+
+#Verwendeter Algorithmus
+# 1. Zielfunktionszeile höchster Wert => Pivotspalte
+# 2. Letzte Spalte durch Pivotspalte teilen
+# 3. Ergebnisse = Engpass Einschränkung => kleinster Wert = Pivotzeile
+# 4. Kreuzung zwischen Pivotspalte und Pivotzeile => Pivotelement
+# Prüfe ob PivotElement = 1 --> Falls nicht auf eins Bringen --> Zeile durch PivotElement teilen
+# 5. Alles in der Pivotspalte außer Pivotelement auf 0 bringen
+
 startImage = ("""
   ______ ______ ______ ______ ______ ______ ______ ______ ______ ______ 
  |______|______|______|______|______|______|______|______|______|______|
@@ -203,7 +217,7 @@ def setAllElementInPivotColumToZero(tableau, indexColumn, indexRow):
     #print("newPivotColumn: \n{}".format(newPivotColumn))
     newPivotRow = createRow(indexRow, tableau)
     #print("newPivotRow: \n{}".format(newPivotRow))
-    pivotElement = newPivotColumn[indexRow] #TODO: BUG mit indexColumn
+    pivotElement = newPivotColumn[indexRow]
     #print("PivotElement: {}".format(pivotElement))
     #Alle Zeilen außer PivotRow und Endzeile
     length = len(tableau)-1
@@ -332,23 +346,20 @@ def startAlgorithm(tableau):
         print("{}".format(forPrintRounded))
 
     if(isFinal(tmpTableau) == True):
-        print("Ende.")
+        print("--------------------")
+        print("Ende")
+        print("--------------------")
         tmpTableau = multiplyFunctionWithMinusOne(tmpTableau)
         forPrint = np.asarray(tmpTableau)
         forPrintRounded = forPrint.round(2)
-        print("Finales Tableau:\n{}".format(forPrintRounded))
+        print("Finales Tableau:\n {} \n".format(forPrintRounded))
         getFinalValuesOfVariables(tmpTableau)
         tableauLength = len(tmpTableau)-1
         finalValue = len(tmpTableau[tableauLength])-1
         resultValue = tmpTableau[tableauLength][finalValue]
-        print("result: {}".format(resultValue))
+        print("\nresult: {}".format(resultValue))
+
 
 startAlgorithm(fullArrayTableau)
-#Algorithmus
-# 1. Zielfunktionszeile höchster Wert => Pivotspalte
-# 2. Letzte Spalte drch Pivotspalte teilen
-# 3. Ergebnise = Engpass Einschränkung
-# -> leinster Wert = Pivotzeile
-# 4. Krezung zwischen Pivotspalte und Pivotzeile = Pivotelement
-# Prüfe ob PivotElement = 1 --> Falls nicht auf eins Bringen --> Zeile durch PivotElement teilen
-# 5. Alles in der Pivotspalte außer Pivotelement auf 0 bringen
+
+
