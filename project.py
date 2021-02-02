@@ -227,22 +227,14 @@ def setAllElementInPivotColumToZero(tableau, indexColumn, indexRow):
     functionArray = []
     functionFaktor = tableau[length][indexColumn]
     functionLength = len(tableau[length])-1
-    #for index, value in enumerate(tableau[length]):
-    #    if functionLength == index:
-    #        result = 0 - newPivotRow[index]*functionFaktor
-    #        actualValue = value
-    #        newString = str(actualValue) + format(" ") + str( result) 
-    #        functionArray.append(newString)
-    #    else:
-    #        result = value - newPivotRow[index]*functionFaktor
-    #        functionArray.append(result)
+
     for index, value in enumerate(tableau[length]):
         result = value - newPivotRow[index]*functionFaktor
         functionArray.append(result)
     tmpArrayWithoutPivotRowAndEnding.append(functionArray)
     tmpArrayWithoutPivotRowAndEnding.insert(indexRow, newPivotRow)
     
-    return tmpArrayWithoutPivotRowAndEnding #tmpArray hat nun wieder PivotRow und Ende
+    return tmpArrayWithoutPivotRowAndEnding
         
 def isFinal(tableau):
     state = False
@@ -274,7 +266,7 @@ def getFinalValuesOfVariables(tmpTableau):
     tmpTableauTransWithoutEnd = tmpTableauTrans[:lengthTrans]
     forPrint = np.asarray(tmpTableauTrans)
     forPrintRounded = forPrint.round(2)
-    print("tmpTableTrans: \n{}".format(forPrintRounded))
+    #print("tmpTableTrans: \n{}".format(forPrintRounded))
 
     #Überprüfe ob die Zeile nur aus 0 oder 1 besteht
     for value in tmpTableauTransWithoutEnd:
@@ -292,11 +284,11 @@ def getFinalValuesOfVariables(tmpTableau):
             tmpArray.append(True)
         else:
             tmpArray.append(False)
-    print("tmpArray:{}".format(tmpArray))
+    #print("tmpArray:{}".format(tmpArray))
     indices = np.where(tmpArray)[0]
-    print(len(indices))
-    print("TandF:{}".format((indices)))
-    print("Index:{}".format(indexForOnes))
+    #print(len(indices))
+    #print("TandF:{}".format((indices)))
+    #print("Index:{}".format(indexForOnes))
     valueArray = []
     for value in indexForOnes:
         temp = tmpTableau[value]
