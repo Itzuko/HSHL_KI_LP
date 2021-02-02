@@ -16,6 +16,7 @@ import re
 # 4. Kreuzung zwischen Pivotspalte und Pivotzeile => Pivotelement
 # Prüfe ob PivotElement = 1 --> Falls nicht auf eins Bringen --> Zeile durch PivotElement teilen
 # 5. Alles in der Pivotspalte außer Pivotelement auf 0 bringen
+0
 
 startImage = ("""
   ______ ______ ______ ______ ______ ______ ______ ______ ______ ______ 
