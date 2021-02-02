@@ -136,7 +136,7 @@ print(np.asarray(fullArrayTableau))
 
 
 def findIndexForPivotColumn(tableau):
-    length = len(tableau)-1
+    length = len(tableau)
     print(tableau[:length])
     indexArray = 0
     highestValue = 0
@@ -148,9 +148,11 @@ def findIndexForPivotColumn(tableau):
     return indexArray
 
 def findIndexForPivotRow(pivotColumn, endColumn):
+    length = len(pivotColumn)-1
+    tmpPivotColumnWithoutLast = pivotColumn[:length]
     engpassColumn = []
     #Engpass erstellen
-    for index, value in enumerate(pivotColumn):
+    for index, value in enumerate(tmpPivotColumnWithoutLast):
         if(endColumn[index] != 0):
             engpassColumn.append(endColumn[index]/value)
         else:
@@ -158,12 +160,10 @@ def findIndexForPivotRow(pivotColumn, endColumn):
 
     #print("engpassColumn: {}".format(engpassColumn)) 
 
-    indexArray = 0
-    highestValue = 0
-    for index, value in enumerate(engpassColumn):
-        if(value < highestValue):
-            highestValue = value
-            indexArray = index
+    minValue = min(engpassColumn)
+    indexArray = engpassColumn.index(minValue)
+
+
 
     return indexArray
 
@@ -237,6 +237,7 @@ def setAllElementInPivotColumToZero(tableau, indexColumn, indexRow):
         functionArray.append(result)
     tmpArrayWithoutPivotRowAndEnding.append(functionArray)
     tmpArrayWithoutPivotRowAndEnding.insert(indexRow, newPivotRow)
+    
     return tmpArrayWithoutPivotRowAndEnding #tmpArray hat nun wieder PivotRow und Ende
         
 def isFinal(tableau):
@@ -280,16 +281,24 @@ def startAlgorithm(tableau):
         iteration += 1
         print("Iteration: {}".format(iteration))
         tmpTableau = setAllElementInPivotColumToZero(tmpTableau,indexPivotColumn, indexPivotRow)
-        print("{}".format(np.asarray(tmpTableau)))
-        completeLength = len(tmpTableau)-1
-        finalValue = len(tmpTableau[completeLength])-1
-        results.append(tmpTableau[completeLength][finalValue])
+        forPrint = np.asarray(tmpTableau)
+        forPrintRounded = forPrint.round(2)
+        print("{}".format(forPrintRounded))
+        #print("{}".format(np.asarray(tmpTableau))
+        #completeLength = len(tmpTableau)-1
+        #finalValue = len(tmpTableau[completeLength])-1
+        #results.append(tmpTableau[completeLength][finalValue])
         #print(results)
         #Setze den Finalen Wert zurück
-        tmpTableau[completeLength][finalValue] = 0
+        #tmpTableau[completeLength][finalValue] = 0
 
     if(isFinal(tmpTableau) == True):
-        print("Results: {}".format(results))
+        print("Finished")
+        tmpTableau = trans(tmpTableau)
+        forPrint = np.asarray(tmpTableau)
+        forPrintRounded = forPrint.round(2)
+        print("{}".format(forPrintRounded))
+        #print("Results: {}".format(results))
 
 
 startAlgorithm(fullArrayTableau)
