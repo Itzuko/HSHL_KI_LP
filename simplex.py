@@ -18,6 +18,7 @@ def startSimplex(ProblemToHandle):
     print("Status, ob Minimierungsproblem: ",isMinProblem)
     #Constraints auslesen
     constraints = readConstraints(ProblemToHandle, splitLines)
+    print(constraints)
     #Objectivefunction an den constraints anhängen
     constraintsWithFunction = addFunctionToList(splitLines, constraints)
     #Aufgebaute Matrix
@@ -106,22 +107,24 @@ def startAlgorithm(tableau):
         length = len(tmpTableau)-1
         indexPivotColumn = findIndexForPivotColumn(tmpTableau[length])
         pivotColumn = createColumn(indexPivotColumn, tmpTableau)
-        #print("pivotColumn: {}".format(pivotColumn))
+        print("pivotColumn: {}".format(pivotColumn))
         endIndex = len(tmpTableau[length])-1
         endColumn = createColumn(endIndex, tmpTableau)
-        #print("EndColumn: {}".format(endColumn))
+        print("EndColumn: {}".format(endColumn))
         indexPivotRow = findIndexForPivotRow(pivotColumn,endColumn)
-        #print("indexPivotRow: {}".format(indexPivotRow))
+        print("indexPivotRow: {}".format(indexPivotRow))
         pivotRow = createRow(indexPivotRow, tmpTableau)
-        #print("pivotRow: {}".format(pivotRow))
+        print("pivotRow: {}".format(pivotRow))
         pivotElement = findPivotElement(tmpTableau,indexPivotColumn,indexPivotRow)
-        #print("PivotElement:{}".format(pivotElement))
-        if (pivotElement > 1):
+        print("PivotElement:{}".format(pivotElement))
+        #TODO: HANDLE IF PIVOT ELEMENT IS Less than 1
+        if (pivotElement != 1 or pivotElement != 0):
             newPivotRow = dividePivotRowByPivotElement(tmpTableau,indexPivotColumn,indexPivotRow)
-            #print("DividedRow: {}".format(newPivotRow))
+            print("DividedRow: {}".format(newPivotRow))
+            tmpTableau[indexPivotRow] = newPivotRow
+            print("Neues Tableau: \n{}".format(np.asarray(tmpTableau)))
         #Row an der passenden Stelle einfügen
-        tmpTableau[indexPivotRow] = newPivotRow
-        #print("Neues Tableau: \n{}".format(np.asarray(tmpTableau)))
+        
         iteration += 1
         print("Iteration: {}".format(iteration))
         tmpTableau = setAllElementInPivotColumToZero(tmpTableau,indexPivotColumn, indexPivotRow)
@@ -129,23 +132,23 @@ def startAlgorithm(tableau):
         forPrintRounded = forPrint.round(2)
         print("{}".format(forPrintRounded))
 
-    if(isFinal(tmpTableau) == True):
-        print("\n--------------------")
-        print("Ende")
-        print("--------------------")
-        tmpTableau = multiplyFunctionWithMinusOne(tmpTableau)
-        forPrint = np.asarray(tmpTableau)
-        forPrintRounded = forPrint.round(2)
-        print("\nFinales Tableau:\n {} \n".format(forPrintRounded))
-        getFinalValuesOfVariables(tmpTableau)
-        tableauLength = len(tmpTableau)-1
-        finalValue = len(tmpTableau[tableauLength])-1
-        resultValue = tmpTableau[tableauLength][finalValue]
-        print("\nOptimum: {}".format(resultValue))
+    #if(isFinal(tmpTableau) == True):
+    print("\n--------------------")
+    print("Ende")
+    print("--------------------")
+    tmpTableau = multiplyFunctionWithMinusOne(tmpTableau)
+    forPrint = np.asarray(tmpTableau)
+    forPrintRounded = forPrint.round(2)
+    print("\nFinales Tableau:\n {} \n".format(forPrintRounded))
+    getFinalValuesOfVariables(tmpTableau)
+    tableauLength = len(tmpTableau)-1
+    finalValue = len(tmpTableau[tableauLength])-1
+    resultValue = tmpTableau[tableauLength][finalValue]
+    print("\nOptimum: {}".format(resultValue))
 
 def findIndexForPivotColumn(tableau):
     length = len(tableau)
-    print(tableau[:length])
+    #print(tableau[:length])
     indexArray = 0
     highestValue = 0
     for index, value in enumerate(tableau[:length]):
@@ -191,8 +194,14 @@ def dividePivotRowByPivotElement(tableau, indexColumn, indexRow):
     
     newPivotRow = []
 
-    for value in tableau[indexRow]:
-        newPivotRow.append(value/pivotElement)
+    for index,value in enumerate(tableau[indexRow]):
+        if index == indexColumn:
+             #set pivotelement to 1
+            tmpValue = pivotElement*(1/pivotElement)
+        else:
+            tmpValue = value/pivotElement
+        newPivotRow.append(tmpValue)
+       
     
     return newPivotRow
 
@@ -239,11 +248,13 @@ def isFinal(tableau):
     state = False
     #print("ENDE")
     length = len(tableau)
+    print(tableau[length-1])
     
     for value in tableau[length-1]:
         if value > 0:
-            return state
-        else:
+            state = False
+            break
+        elif value <=0 :
             state = True
 
     return state
