@@ -1,13 +1,7 @@
-import os
-import sys
-import numpy as np
 import re
+import numpy as np
+from numpy.lib.shape_base import split
 
-#Lösung überprüft mit:
-#http://simplex.tode.cz/en/ 
-
-#Eigenes Github-Repo:
-#https://github.com/Itzuko/HSHL_KI_LP
 
 #Verwendeter Algorithmus
 # 1. Zielfunktionszeile höchster Wert => Pivotspalte
@@ -16,110 +10,64 @@ import re
 # 4. Kreuzung zwischen Pivotspalte und Pivotzeile => Pivotelement
 # Prüfe ob PivotElement = 1 --> Falls nicht auf eins Bringen --> Zeile durch PivotElement teilen
 # 5. Alles in der Pivotspalte außer Pivotelement auf 0 bringen
-0
 
-startImage = ("""
-  ______ ______ ______ ______ ______ ______ ______ ______ ______ ______ 
- |______|______|______|______|______|______|______|______|______|______|
-  _    _  _____ _    _ _
- | |  | |/ ____| |  | | |                                               
- | |__| | (___ | |__| | |                                               
- |  __  |\___ \|  __  | |                                               
- | |  | |____) | |  | | |____                                           
- |_| _|_|_____/|_|  |_|______|
- |_  _ _____            _____           _      _    _                   
- | |/ /_   _|          |  __ \         (_)    | |  | |                  
- | ' /  | |    ______  | |__) | __ ___  _  ___| | _| |_                 
- |  <   | |   |______| |  ___/ '__/ _ \| |/ _ \ |/ / __|                
- | . \ _| |_           | |   | | | (_) | |  __/   <| |_                 
- |_|\_\_____|          |_|   |_|__\___/| |\___|_|\_\\__|                
- |_____                         _____ _/ |
- |  __ (_)                     / ____|__/       | |                     
- | |__) |  ___ _ __ _ __ ___  | (___  _   _  ___| | _____ _ __          
- |  ___/ |/ _ \ '__| '__/ _ \  \___ \| | | |/ __| |/ / _ \ '__|         
- | |   | |  __/ |  | | |  __/  ____) | |_| | (__|   <  __/ |            
- |_|   |_|\___|_|  |_|  \___| |_____/ \__,_|\___|_|\_\___|_|            
-  ______ ______ ______ ______ ______ ______ ______ ______ ______ ______ 
- |______|______|______|______|______|______|______|______|______|______|""")
-print("{}".format(startImage))
-print("\nWillkommen")
-print("Folgende Probleme können gelöst werden")
-#Array für die Dateien
-fileListName = []
-fileListPath = []
+def startSimplex(ProblemToHandle):
+    splitLines = ProblemToHandle.splitlines()
+    #Überprüfung, ob Minimierungs- oder Maximierungsproblem
+    isMinProblem = checkIfMinOrMax(ProblemToHandle,splitLines)
+    print("Status, ob Minimierungsproblem: ",isMinProblem)
+    #Constraints auslesen
+    constraints = readConstraints(ProblemToHandle, splitLines)
+    #Objectivefunction an den constraints anhängen
+    constraintsWithFunction = addFunctionToList(splitLines, constraints)
+    #Aufgebaute Matrix
+    print("\nMatrix:")
+    print(np.asarray(constraintsWithFunction))
+    #Matrix transponieren falls Minimierungsproblem
+    if isMinProblem:
+        constraintsWithFunction = trans(constraintsWithFunction)
+        print("\nTransponiere...")
+        print(np.asarray(constraintsWithFunction))
+    #Tableau aufbauen
+    Tableau = createTableau(constraintsWithFunction)
+    print(np.asarray(Tableau))
+    startAlgorithm(Tableau)
 
-#Dateien Öffnen und zu den Array hinzufügen
-d = 'KI_Benchmarks'
-for path in os.listdir(d):
-    full_path = os.path.join(d, path)
-    if os.path.isfile(full_path):
-        fileListPath.append(full_path)
-        fileListName.append(full_path.split("\\")[1])
-
-#Anzeigen zwischen den Optionen
-tmpCounter = 0
-for fileName in fileListName:
-    print( "[%d] %s\r" %(tmpCounter, fileName))
-    tmpCounter = tmpCounter + 1
-
-#Auswahl vom User der Dateien
-choice = input("\n\rWelches Problem soll gelöst werden? [0 - " + str(tmpCounter-1) + " ]: ")
-print("Es wurde gewählt", fileListName[int(choice)])
-
-#Öffnen und Ausgabe der Datei
-f = open(fileListPath[int(choice)])
-readFile = f.read()
-print(readFile)
-
-def checkIfMin (stringToCheck):
-    print("Überprüfe ob Min oder Max Problem")
-    if stringToCheck == "min":
-        print("min")
-        return True 
-    elif stringToCheck =="max":
-        print("max")
-        return False
+def checkIfMinOrMax(ProblemToHandle, splitLines):
+    minOrMax = splitLines[1][:3]
+    isMinProblem = False
+    if minOrMax == "min":
+        isMinProblem = True 
+    elif minOrMax =="max":
+        isMinProblem = False
     else:
         print("Etwas ist schiefgelaufen")
         #TODO: Programm neustarten
+    
+    return isMinProblem
 
-#Prüfe ob minimierungsproblem
-FileLineSplit = readFile.splitlines()
-minOrMax = FileLineSplit[1][:3]
-print(minOrMax)
-isMinProblem = checkIfMin(minOrMax)
-print("Status ob minimierungsproblem: ",isMinProblem)
+def readConstraints(ProblemToHandle, lineCount):
+    constraintsArray = lineCount[3:]
+    coef_regex = re.compile(r"(\d+)(?:\*|;)")
+    coef_string = [coef_regex.findall(i) for i in constraintsArray]
+    coefficients = [list(map(int, x)) for x in coef_string]
+    return coefficients
 
-#Anzahl der Constraints
-lineCount = readFile.splitlines()
-constraintsArray = lineCount[3:]
-coef_regex = re.compile(r"(\d+)(?:\*|;)")
-coef_string = [coef_regex.findall(i) for i in constraintsArray]
-coefficients = [list(map(int, x)) for x in coef_string]
+def addFunctionToList(splitLine, constraints):
+    tmpFunction = splitLine[1][4:]
+    tmpFunctionRegex = re.compile(r"(\d+)(?:\*)")
+    tmpFunctionString = re.findall(tmpFunctionRegex, tmpFunction)
+    tmpNumbersOfFunction = list(map(int, tmpFunctionString))
+    tmpNumbersOfFunction.append(0)
+    coefficients = constraints
+    coefficients.append(tmpNumbersOfFunction)
+    return coefficients
 
 def trans(M):
     return [[M[j][i] for j in range(len(M))] for i in range(len(M[0]))]
 
-#Füge die Funktion der Liste hinzu
-tmpFunction = FileLineSplit[1][4:]
-tmpFunctionRegex = re.compile(r"(\d+)(?:\*)")
-tmpFunctionString = re.findall(tmpFunctionRegex, tmpFunction)
-tmpNumbersOfFunction = list(map(int, tmpFunctionString))
-tmpNumbersOfFunction.append(0)
-coefficients.append(tmpNumbersOfFunction)
-allNumbersOfFile_List = coefficients
-print("Vollständig:")
-print(np.asarray(allNumbersOfFile_List))
-# TRANSPONIEREN...
-print("Transponiere...")
-fullArray = trans(allNumbersOfFile_List)
-#lengthFullArray = len(fullArray)-1
-#for index ,value in enumerate(fullArray[lengthFullArray]):
-#    fullArray[lengthFullArray][index] = value * -1
-
-print(np.asarray(fullArray))
-
-def creationOfTableau(array):
+def createTableau(array):
+    print("\nTableau aufbauen...")
     length = len(array)-1
     tmpCounterForOne = 0
     
@@ -149,10 +97,51 @@ def creationOfTableau(array):
         array[index] = value
     return array
 
-print("Tableau aufbauen...")
-fullArrayTableau = creationOfTableau(fullArray)
-print(np.asarray(fullArrayTableau))
+def startAlgorithm(tableau):
+    iteration = 0
+    tmpTableau = tableau
+    results = []
+    while isFinal(tmpTableau) == False:
+        #Finde Pivotspalte (zuerst Index finden und dann aufstellen)
+        length = len(tmpTableau)-1
+        indexPivotColumn = findIndexForPivotColumn(tmpTableau[length])
+        pivotColumn = createColumn(indexPivotColumn, tmpTableau)
+        #print("pivotColumn: {}".format(pivotColumn))
+        endIndex = len(tmpTableau[length])-1
+        endColumn = createColumn(endIndex, tmpTableau)
+        #print("EndColumn: {}".format(endColumn))
+        indexPivotRow = findIndexForPivotRow(pivotColumn,endColumn)
+        #print("indexPivotRow: {}".format(indexPivotRow))
+        pivotRow = createRow(indexPivotRow, tmpTableau)
+        #print("pivotRow: {}".format(pivotRow))
+        pivotElement = findPivotElement(tmpTableau,indexPivotColumn,indexPivotRow)
+        #print("PivotElement:{}".format(pivotElement))
+        if (pivotElement > 1):
+            newPivotRow = dividePivotRowByPivotElement(tmpTableau,indexPivotColumn,indexPivotRow)
+            #print("DividedRow: {}".format(newPivotRow))
+        #Row an der passenden Stelle einfügen
+        tmpTableau[indexPivotRow] = newPivotRow
+        #print("Neues Tableau: \n{}".format(np.asarray(tmpTableau)))
+        iteration += 1
+        print("Iteration: {}".format(iteration))
+        tmpTableau = setAllElementInPivotColumToZero(tmpTableau,indexPivotColumn, indexPivotRow)
+        forPrint = np.asarray(tmpTableau)
+        forPrintRounded = forPrint.round(2)
+        print("{}".format(forPrintRounded))
 
+    if(isFinal(tmpTableau) == True):
+        print("\n--------------------")
+        print("Ende")
+        print("--------------------")
+        tmpTableau = multiplyFunctionWithMinusOne(tmpTableau)
+        forPrint = np.asarray(tmpTableau)
+        forPrintRounded = forPrint.round(2)
+        print("\nFinales Tableau:\n {} \n".format(forPrintRounded))
+        getFinalValuesOfVariables(tmpTableau)
+        tableauLength = len(tmpTableau)-1
+        finalValue = len(tmpTableau[tableauLength])-1
+        resultValue = tmpTableau[tableauLength][finalValue]
+        print("\nOptimum: {}".format(resultValue))
 
 def findIndexForPivotColumn(tableau):
     length = len(tableau)
@@ -181,9 +170,6 @@ def findIndexForPivotRow(pivotColumn, endColumn):
 
     minValue = min(engpassColumn)
     indexArray = engpassColumn.index(minValue)
-
-
-
     return indexArray
 
 def createColumn(indexPivotColumn, tableau):
@@ -196,8 +182,6 @@ def createColumn(indexPivotColumn, tableau):
 def createRow(indexPivotRow, tableau):
     return tableau[indexPivotRow]
     
-
-
 def findPivotElement(tableu, indexColumn, IndexRow):
     pivotElement = tableu[IndexRow][indexColumn]
     return pivotElement
@@ -311,56 +295,4 @@ def getFinalValuesOfVariables(tmpTableau):
         valueArray.append(temp[tmpLength])
         
     for index, value in enumerate(indices):
-        print("x{0} = {1}".format(value, valueArray[index]))
-    
-
-def startAlgorithm(tableau):
-    iteration = 0
-    tmpTableau = tableau
-    results = []
-    while isFinal(tmpTableau) == False:
-        #Finde Pivotspalte (zuerst Index finden und dann aufstellen)
-        length = len(tmpTableau)-1
-        indexPivotColumn = findIndexForPivotColumn(tmpTableau[length])
-        pivotColumn = createColumn(indexPivotColumn, tmpTableau)
-        #print("pivotColumn: {}".format(pivotColumn))
-        endIndex = len(tmpTableau[length])-1
-        endColumn = createColumn(endIndex, tmpTableau)
-        #print("EndColumn: {}".format(endColumn))
-        indexPivotRow = findIndexForPivotRow(pivotColumn,endColumn)
-        #print("indexPivotRow: {}".format(indexPivotRow))
-        pivotRow = createRow(indexPivotRow, tmpTableau)
-        #print("pivotRow: {}".format(pivotRow))
-        pivotElement = findPivotElement(tmpTableau,indexPivotColumn,indexPivotRow)
-        #print("PivotElement:{}".format(pivotElement))
-        if (pivotElement > 1):
-            newPivotRow = dividePivotRowByPivotElement(tmpTableau,indexPivotColumn,indexPivotRow)
-            #print("DividedRow: {}".format(newPivotRow))
-        #Row an der passenden Stelle einfügen
-        tmpTableau[indexPivotRow] = newPivotRow
-        #print("Neues Tableau: \n{}".format(np.asarray(tmpTableau)))
-        iteration += 1
-        print("Iteration: {}".format(iteration))
-        tmpTableau = setAllElementInPivotColumToZero(tmpTableau,indexPivotColumn, indexPivotRow)
-        forPrint = np.asarray(tmpTableau)
-        forPrintRounded = forPrint.round(2)
-        print("{}".format(forPrintRounded))
-
-    if(isFinal(tmpTableau) == True):
-        print("--------------------")
-        print("Ende")
-        print("--------------------")
-        tmpTableau = multiplyFunctionWithMinusOne(tmpTableau)
-        forPrint = np.asarray(tmpTableau)
-        forPrintRounded = forPrint.round(2)
-        print("Finales Tableau:\n {} \n".format(forPrintRounded))
-        getFinalValuesOfVariables(tmpTableau)
-        tableauLength = len(tmpTableau)-1
-        finalValue = len(tmpTableau[tableauLength])-1
-        resultValue = tmpTableau[tableauLength][finalValue]
-        print("\nresult: {}".format(resultValue))
-
-
-startAlgorithm(fullArrayTableau)
-
-
+        print("x{0} = {1}".format(value, valueArray[index]))    
