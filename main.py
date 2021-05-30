@@ -14,4 +14,3 @@ start.start()
 start.showKIProblems()
 usersChoice =  start.getUserInput()
 simplex.startSimplex(usersChoice)
-

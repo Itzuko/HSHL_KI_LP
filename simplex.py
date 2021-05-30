@@ -2,7 +2,6 @@ import re
 import numpy as np
 from numpy.lib.shape_base import split
 
-
 #Verwendeter Algorithmus
 # 1. Zielfunktionszeile höchster Wert => Pivotspalte
 # 2. Letzte Spalte durch Pivotspalte teilen
@@ -32,7 +31,7 @@ def startSimplex(ProblemToHandle):
     #Tableau aufbauen
     Tableau = createTableau(constraintsWithFunction)
     print(np.asarray(Tableau))
-    startAlgorithm(Tableau)
+    startAlgorithm(Tableau, isMinProblem)
 
 def checkIfMinOrMax(ProblemToHandle, splitLines):
     minOrMax = splitLines[1][:3]
@@ -98,7 +97,7 @@ def createTableau(array):
         array[index] = value
     return array
 
-def startAlgorithm(tableau):
+def startAlgorithm(tableau, isMinProblem):
     iteration = 0
     tmpTableau = tableau
     results = []
@@ -117,7 +116,6 @@ def startAlgorithm(tableau):
         print("pivotRow: {}".format(pivotRow))
         pivotElement = findPivotElement(tmpTableau,indexPivotColumn,indexPivotRow)
         print("PivotElement:{}".format(pivotElement))
-        #TODO: HANDLE IF PIVOT ELEMENT IS Less than 1
         if (pivotElement != 1 or pivotElement != 0):
             newPivotRow = dividePivotRowByPivotElement(tmpTableau,indexPivotColumn,indexPivotRow)
             print("DividedRow: {}".format(newPivotRow))
@@ -137,10 +135,19 @@ def startAlgorithm(tableau):
     print("Ende")
     print("--------------------")
     tmpTableau = multiplyFunctionWithMinusOne(tmpTableau)
+    if(isMinProblem):
+        #print("Is Min Problem")
+        #print(np.asarray(tmpTableau))
+        tmpTableau = trans(tmpTableau)
+        #print(np.asarray(tmpTableau))
     forPrint = np.asarray(tmpTableau)
     forPrintRounded = forPrint.round(2)
+    #Formatiertes Tableau
     print("\nFinales Tableau:\n {} \n".format(forPrintRounded))
-    getFinalValuesOfVariables(tmpTableau)
+    #Einzelne Werte
+    getFinalValues(tmpTableau)
+    #getFinalValuesOfVariables(tmpTableau)
+    #Optimum bestimmen
     tableauLength = len(tmpTableau)-1
     finalValue = len(tmpTableau[tableauLength])-1
     resultValue = tmpTableau[tableauLength][finalValue]
@@ -266,6 +273,23 @@ def multiplyFunctionWithMinusOne(tmpTableau):
     
     return tmpTableau
 
+def getFinalValues(tableau):
+    finalValueArray = []
+    lengthOfTableauWithoutFunction = len(tableau)-1
+    tableauWithoutFunction = tableau[:lengthOfTableauWithoutFunction]
+    for value in tableauWithoutFunction:
+        #print(value) 
+        lengthOfValue = len(value)-1
+        finalValue = value[lengthOfValue]
+        finalValueArray.append(finalValue)
+
+    roundedFinalValueArray= np.asarray(finalValueArray)
+    roundedFinalValueArray = roundedFinalValueArray.round(2)
+    for index, value in enumerate(roundedFinalValueArray):
+        print("x{0} = {1}".format(index, roundedFinalValueArray[index])) 
+
+'''
+old function
 def getFinalValuesOfVariables(tmpTableau):
     tmpArray = []
     indexForOnes = []
@@ -276,8 +300,8 @@ def getFinalValuesOfVariables(tmpTableau):
     tmpTableauTransWithoutEnd = tmpTableauTrans[:lengthTrans]
     forPrint = np.asarray(tmpTableauTrans)
     forPrintRounded = forPrint.round(2)
-    #print("tmpTableTrans: \n{}".format(forPrintRounded))
-
+    print("tmpTableTrans: \n{}".format(forPrintRounded))
+    #TODO: WAS MACHT DIESER CODE?
     #Überprüfe ob die Zeile nur aus 0 oder 1 besteht
     for value in tmpTableauTransWithoutEnd:
         onlyOneAndZeros = False
@@ -307,3 +331,4 @@ def getFinalValuesOfVariables(tmpTableau):
         
     for index, value in enumerate(indices):
         print("x{0} = {1}".format(value, valueArray[index]))    
+'''
