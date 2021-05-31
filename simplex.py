@@ -17,7 +17,7 @@ def startSimplex(ProblemToHandle):
     print("Status, ob Minimierungsproblem: ",isMinProblem)
     #Constraints auslesen
     constraints = readConstraints(ProblemToHandle, splitLines)
-    print(constraints)
+    #print(constraints)
     #Objectivefunction an den constraints anhängen
     constraintsWithFunction = addFunctionToList(splitLines, constraints)
     #Aufgebaute Matrix
@@ -30,7 +30,8 @@ def startSimplex(ProblemToHandle):
         print(np.asarray(constraintsWithFunction))
     #Tableau aufbauen
     Tableau = createTableau(constraintsWithFunction)
-    print(np.asarray(Tableau))
+    
+    print("{}\n".format(np.asarray(Tableau)))
     startAlgorithm(Tableau, isMinProblem)
 
 def checkIfMinOrMax(ProblemToHandle, splitLines):
@@ -106,21 +107,21 @@ def startAlgorithm(tableau, isMinProblem):
         length = len(tmpTableau)-1
         indexPivotColumn = findIndexForPivotColumn(tmpTableau[length])
         pivotColumn = createColumn(indexPivotColumn, tmpTableau)
-        print("pivotColumn: {}".format(pivotColumn))
+        #print("pivotColumn: {}".format(pivotColumn))
         endIndex = len(tmpTableau[length])-1
         endColumn = createColumn(endIndex, tmpTableau)
-        print("EndColumn: {}".format(endColumn))
+        #print("EndColumn: {}".format(endColumn))
         indexPivotRow = findIndexForPivotRow(pivotColumn,endColumn)
-        print("indexPivotRow: {}".format(indexPivotRow))
+        #print("indexPivotRow: {}".format(indexPivotRow))
         pivotRow = createRow(indexPivotRow, tmpTableau)
-        print("pivotRow: {}".format(pivotRow))
+        #print("pivotRow: {}".format(pivotRow))
         pivotElement = findPivotElement(tmpTableau,indexPivotColumn,indexPivotRow)
-        print("PivotElement:{}".format(pivotElement))
+        #print("PivotElement:{}".format(pivotElement))
         if (pivotElement != 1 or pivotElement != 0):
             newPivotRow = dividePivotRowByPivotElement(tmpTableau,indexPivotColumn,indexPivotRow)
-            print("DividedRow: {}".format(newPivotRow))
+            #print("DividedRow: {}".format(newPivotRow))
             tmpTableau[indexPivotRow] = newPivotRow
-            print("Neues Tableau: \n{}".format(np.asarray(tmpTableau)))
+            print("Neues Tableau: \n{}\n".format(np.asarray(tmpTableau)))
         #Row an der passenden Stelle einfügen
         
         iteration += 1
@@ -130,7 +131,6 @@ def startAlgorithm(tableau, isMinProblem):
         forPrintRounded = forPrint.round(2)
         print("{}".format(forPrintRounded))
 
-    #if(isFinal(tmpTableau) == True):
     print("\n--------------------")
     print("Ende")
     print("--------------------")
@@ -255,7 +255,7 @@ def isFinal(tableau):
     state = False
     #print("ENDE")
     length = len(tableau)
-    print(tableau[length-1])
+    #print(tableau[length-1])
     
     for value in tableau[length-1]:
         if value > 0:
