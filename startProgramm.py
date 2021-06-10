@@ -1,3 +1,5 @@
+import tkinter as tk
+from tkinter import filedialog
 import os
 
 def start():
@@ -31,8 +33,8 @@ def start():
     print("Folgende Probleme können gelöst werden:")
 
 #Array für die Dateien
-fileListName = []
-fileListPath = []
+fileListName = ['Eigene Datei auswählen']
+fileListPath = ['LEER']
 
 def showKIProblems():
     #Dateien Öffnen und zu den Arrays hinzufügen
@@ -52,8 +54,15 @@ def showKIProblems():
 def getUserInput():
     #Auswahl vom User der Dateien
     choice = input("\n\rWelches Problem soll gelöst werden? [0 - " + str(len(fileListName) - 1) + " ]: ")
-    print("Es wurde " + str(fileListName[int(choice)]) + " gewählt" )
-    #Öffnen und Ausgabe der Datei
+    print("Es wurde ''" + str(fileListName[int(choice)]) + "'' gewählt" )
+    
+    #Eigene Datei laden
+    if int(choice) == 0:
+        root = tk.Tk()
+        root.withdraw()
+        file_path = filedialog.askopenfilename()
+        fileListPath[0] = file_path
+
     f = open(fileListPath[int(choice)])
     readFile = f.read()
     print('\n', readFile)

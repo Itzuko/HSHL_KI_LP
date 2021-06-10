@@ -121,7 +121,7 @@ def startAlgorithm(tableau, isMinProblem):
             newPivotRow = dividePivotRowByPivotElement(tmpTableau,indexPivotColumn,indexPivotRow)
             #print("DividedRow: {}".format(newPivotRow))
             tmpTableau[indexPivotRow] = newPivotRow
-            print("Neues Tableau: \n{}\n".format(np.asarray(tmpTableau)))
+            print("Neues Tableau mit Pivotelement auf 1: \n{}\n".format(np.asarray(tmpTableau)))
         #Row an der passenden Stelle einfügen
         
         iteration += 1
