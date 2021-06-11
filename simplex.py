@@ -182,8 +182,12 @@ def findIndexForPivotRow(pivotColumn, endColumn):
     #Engpass erstellen
     for index, value in enumerate(tmpPivotColumnWithoutLast):
         if(endColumn[index] != 0):
-            tmpValue = endColumn[index]/value
-            engpassColumn.append(endColumn[index]/value)
+            if(value==0):
+                engpassColumn.append(999999)
+                engpassIndexKeineWerte[index]=True
+            else:
+                tmpValue = endColumn[index]/value
+                engpassColumn.append(endColumn[index]/value)
             if (tmpValue < 0):
                 engpassIndexKeineWerte[index] = True
         else:
