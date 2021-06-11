@@ -102,7 +102,7 @@ def startAlgorithm(tableau, isMinProblem):
     iteration = 0
     tmpTableau = tableau
     results = []
-    while isFinal(tmpTableau) == False or iteration == 7:
+    while isFinal(tmpTableau) == False:
         #Finde Pivotspalte (zuerst Index finden und dann aufstellen)
         length = len(tmpTableau)-1
         indexPivotColumn = findIndexForPivotColumn(tmpTableau[length])
@@ -142,14 +142,16 @@ def startAlgorithm(tableau, isMinProblem):
     print("--------------------")
     tmpTableau = multiplyFunctionWithMinusOne(tmpTableau)
     if(isMinProblem):
-        #print("Is Min Problem")
+        print("Is Min Problem")
         #print(np.asarray(tmpTableau))
         tmpTableau = trans(tmpTableau)
         #print(np.asarray(tmpTableau))
     forPrint = np.asarray(tmpTableau)
-    forPrintRounded = forPrint.round(2)
+    print(" Finales Tableau:")
+    with np.printoptions(precision=3, suppress=True):
+        print(forPrint)
     #Formatiertes Tableau
-    print("\nFinales Tableau:\n {} \n".format(forPrintRounded))
+    #print("\nFinales Tableau:\n {} \n".format(forPrintRounded))
     #Einzelne Werte
     getFinalValues(tmpTableau)
     #getFinalValuesOfVariables(tmpTableau)
@@ -185,7 +187,7 @@ def findIndexForPivotRow(pivotColumn, endColumn):
             if (tmpValue < 0):
                 engpassIndexKeineWerte[index] = True
         else:
-            #HIER WAS MACHEN WEGEN 0 Value
+            #Prüfe ob der Wert Null ist und falls ja ob dieser Bereits in der Liste engpassIndexKeineWerte existiert
             if(endColumn[index] == 0):
                 if index in engpassIndexKeineWerte:
                     print("Existiert bereits");
@@ -236,10 +238,8 @@ def dividePivotRowByPivotElement(tableau, indexColumn, indexRow):
     
     return newPivotRow
 
-#TODO: DIESER ALGORITMUS FUNKTIONIERT BEI GROßEN ARRAYS NICHT!!!
 #Funktion um die Pivotspalte auf 0 zu bekommen bis auf das Pivotelement
 def setAllElementInPivotColumToZero(tableau, indexColumn, indexRow):
-    print("!!SETALLELEMENTINPIVOTCOLUMNTOZERO!!")
     newPivotColumn = createColumn(indexColumn, tableau)
     #print("newPivotColumn: \n{}".format(newPivotColumn))
     newPivotRow = createRow(indexRow, tableau)
@@ -313,48 +313,3 @@ def getFinalValues(tableau):
     roundedFinalValueArray = roundedFinalValueArray.round(2)
     for index, value in enumerate(roundedFinalValueArray):
         print("x{0} = {1}".format(index, roundedFinalValueArray[index])) 
-
-'''
-old function
-def getFinalValuesOfVariables(tmpTableau):
-    tmpArray = []
-    indexForOnes = []
-    length = len(tmpTableau)-1
-    tmpTableauWithoutEnd = tmpTableau[:length]
-    tmpTableauTrans = trans(tmpTableauWithoutEnd)
-    lengthTrans = len(tmpTableauTrans)-1
-    tmpTableauTransWithoutEnd = tmpTableauTrans[:lengthTrans]
-    forPrint = np.asarray(tmpTableauTrans)
-    forPrintRounded = forPrint.round(2)
-    print("tmpTableTrans: \n{}".format(forPrintRounded))
-    #TODO: WAS MACHT DIESER CODE?
-    #Überprüfe ob die Zeile nur aus 0 oder 1 besteht
-    for value in tmpTableauTransWithoutEnd:
-        onlyOneAndZeros = False
-        for index ,line in enumerate(value):
-            #check if value 0 or 1
-            if line == 0 or line == 1:
-                onlyOneAndZeros = True
-                if line == 1:
-                    indexForOnes.append(index) 
-            else:
-                onlyOneAndZeros = False
-                break
-        if onlyOneAndZeros == True:
-            tmpArray.append(True)
-        else:
-            tmpArray.append(False)
-    #print("tmpArray:{}".format(tmpArray))
-    indices = np.where(tmpArray)[0]
-    #print(len(indices))
-    #print("TandF:{}".format((indices)))
-    #print("Index:{}".format(indexForOnes))
-    valueArray = []
-    for value in indexForOnes:
-        temp = tmpTableau[value]
-        tmpLength = len(temp)-1
-        valueArray.append(temp[tmpLength])
-        
-    for index, value in enumerate(indices):
-        print("x{0} = {1}".format(value, valueArray[index]))    
-'''
