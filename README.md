@@ -1,29 +1,14 @@
 # Readme
-Das Projekt ist ein Studentenprojekt aus dem Studiengang Intelligent Systems Design und wurde im Rahmen der Veranstaltung für Künstliche Intelligenz entwickelt. Der Entwickler ist Pierre Sucker.
+The project is a student project from the Intelligent Systems Design course. It was developed as part of the Artificial Intelligence class. The developer is Pierre Sucker.
 
+## Usage
+* Prerequisite is the operating system Windows
+* There are two ways to use the program:
 
-## Installation
+### Option 1:
+* Change to the folder "dist/main" and execute the file "main.exe". The program will then start automatically.
 
-* Klone das Repository.
-* Installiere Python: https://www.python.org/downloads/release/python-377/
-
-```bash
-$ git clone https://github.com/Itzuko/HSHL_KI_LP.git
-```
-
-## Benutzung
-* Für die Benutzung wird das OS Windows benutzt. 
-* Um das Programm zu nutzen gibt es zwei Varianten. Das Projekt startet dann automatisch. Es können eigenen Dateien oder vorhandene KI_Benchmarks ausgewählt werden. Die benötigen Dateien sind enthalten. Um die verschiedenen Berechnungen durchzuführen, wähle eine der vorgeschlagenen Optionen aus.
-
-### Variante 1:
-* Öffne im Ordner mit einem Doppelklick die Datei main.py
-
-### Variante 2:
-* Öffne das CMD.
-* Navigiere zum Pfad der Datei und führe das folgende aus:
-```python
-cd .NAVIGIERE_ZUM_PFAD_VOM_PROJEKT
-main.py
-```
-
-
+### Option 2:
+Prerequisite:
+* Python 3.7.7
+* Open main.py
