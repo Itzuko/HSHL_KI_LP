@@ -23,7 +23,8 @@ choice = choice.lower()
 if(choice == 'y'):
     def clear(): return os.system('cls')
     clear()
-    os.system("python main.py")
+    os.execv(sys.executable, ['python'] + sys.argv)
+    #os.system("python main.py")
     print("Restarting...")
     exit()
 else:
