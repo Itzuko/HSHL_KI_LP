@@ -1,5 +1,6 @@
 # Readme
-Das Projekt ist ein Studierendenprojekt aus dem Studiengang Intelligent Systems Design und wurde im Rahmen der Veranstaltung für Künstliche Intelligenz entwickelt. Der Entwickler ist Pierre Sucker.
+Das Projekt ist ein Studentenprojekt aus dem Studiengang Intelligent Systems Design und wurde im Rahmen der Veranstaltung für Künstliche Intelligenz entwickelt. Der Entwickler ist Pierre Sucker.
+
 
 ## Installation
 
@@ -12,14 +13,18 @@ $ git clone https://github.com/Itzuko/HSHL_KI_LP.git
 ```
 
 ## Benutzung
+Für die Benutzung wird das OS Windows benutzt. 
+Um das Programm zu nutzen gibt es zwei Varianten. Das Projekt startet dann automatisch. Es können eigenen Dateien oder vorhandene KI_Benchmarks ausgewählt werden. Die benötigen Dateien sind enthalten. Um die verschiedenen Berechnungen durchzuführen, wähle eine der vorgeschlagenen Optionen aus.
 
+### Variante 1:
+Öffne im Ordner main.py
+
+### Variante 2:
+Öffne das CMD.
 Navigiere zum Pfad der Datei und führe das folgende aus:
 ```python
-cd .NAVIGIERE_ZUM_PFAD
-project.py
+cd .NAVIGIERE_ZUM_PFAD_VOM_PROEJKT
+main.py
 ```
-Das Projekt startet dann automatisch. Die benötigen Dateien sind enthalten. Um die verschiedenen Berechnungen durchzuführen, gib dafür einfach am Anfang eine Zahl zwischen 0-6 ein.
 
-## Test
-Die Ergebnisse wurden mit http://simplex.tode.cz/en/ getestet. 
-Repository zum Projekt: https://github.com/uestla/Simplex-Calculator
+
