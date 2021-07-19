@@ -23,7 +23,7 @@ Um das Programm zu nutzen gibt es zwei Varianten. Das Projekt startet dann autom
 Öffne das CMD.
 Navigiere zum Pfad der Datei und führe das folgende aus:
 ```python
-cd .NAVIGIERE_ZUM_PFAD_VOM_PROEJKT
+cd .NAVIGIERE_ZUM_PFAD_VOM_PROJEKT
 main.py
 ```
 
