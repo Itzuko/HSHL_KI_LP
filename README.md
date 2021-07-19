@@ -17,7 +17,7 @@ Für die Benutzung wird das OS Windows benutzt.
 Um das Programm zu nutzen gibt es zwei Varianten. Das Projekt startet dann automatisch. Es können eigenen Dateien oder vorhandene KI_Benchmarks ausgewählt werden. Die benötigen Dateien sind enthalten. Um die verschiedenen Berechnungen durchzuführen, wähle eine der vorgeschlagenen Optionen aus.
 
 ### Variante 1:
-Öffne im Ordner main.py
+Öffne im Ordner mit einem Doppelklick die Datei main.py
 
 ### Variante 2:
 Öffne das CMD.
