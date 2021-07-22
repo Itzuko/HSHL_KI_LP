@@ -43,7 +43,6 @@ def checkIfMinOrMax(ProblemToHandle, splitLines):
         isMinProblem = False
     else:
         print("Etwas ist schiefgelaufen")
-        #TODO: Programm neustarten
     
     return isMinProblem
 
@@ -117,7 +116,6 @@ def startAlgorithm(tableau, isMinProblem):
         #print("pivotRow: {}".format(pivotRow))
         pivotElement = findPivotElement(tmpTableau,indexPivotColumn,indexPivotRow)
         print("PivotElement:{}".format(pivotElement))
-        #TODO:HIER LIEGT EIN FEHLER VOR
         if (pivotElement != 1 or pivotElement != 0):
             newPivotRow = dividePivotRowByPivotElement(tmpTableau,indexPivotColumn,indexPivotRow)
             #print("DividedRow: {}".format(newPivotRow))
